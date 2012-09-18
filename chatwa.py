@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# a basic LAN chat app
+
 
 from socket import *
 from time import ctime
