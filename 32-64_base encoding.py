@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+# converts base-32 encoding to base-64
+
 # base 32  dictionary
 x_32={}
 for i in range(32):
