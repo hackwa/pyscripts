@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+# takes username and pass from user and matches from database
+# has a register option for new users 
+
 import sys
 import MySQLdb as mdb
 
