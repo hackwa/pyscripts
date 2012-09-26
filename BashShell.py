@@ -1,15 +1,19 @@
 #!/usr/bin/python
 
+# BASH shell with some custom as well as native commands 
+# To fix-History support
+
 import os
 from commands import getstatusoutput
 import random
+import subprocess
 
 
 
 print ('Enter "help" to see the list of commands')
 
 
-def helpwa():
+def helpw():
 	print '\n *****list of commands*****'
 	print ' help'
 	print ' pwd'
@@ -22,11 +26,11 @@ def helpwa():
 	print ' kurkure'
 	print ' \'h\' for previous command' 
 
-def pwdwa():
+def pwdw():
 	pwd = os.getcwd()
 	print pwd
 
-def lswa(dirwa=None):
+def lsw(dirwa=None):
 	if dirwa==None:
 	         pwd=os.getcwd()
 	         ls=os.listdir(pwd)
@@ -38,13 +42,13 @@ def lswa(dirwa=None):
 
 
 
-def cdwa(dirwa=None): 
+def cdw(dirwa=None): 
 	if dirwa==None:
 		os.chdir('/home/anurag')
 	else:
 		os.chdir(dirwa)
 
-def catwa(filename):
+def catw(filename):
 	if filename not in os.listdir(os.getcwd()):
 		print 'Errorwa! file does not exist'
 		return
@@ -54,7 +58,7 @@ def catwa(filename):
 			print eachline,
 		f.close()
 
-def touchwa(filename):
+def touchw(filename):
 	f=open(os.getcwd()+'/'+filename,'w')
 	f.close()
 
@@ -77,30 +81,30 @@ def prime():
 			history=0
 			recent.append(cur)
 		if cmd[0] =='help':
-			helpwa()
+			helpw()
 		elif cmd[0]=='pwd':
-			pwdwa()
+			pwdw()
 		elif cmd[0]=='ls':
 			if len(cmd)>1:
-				lswa(cmd[1])
+				lsw(cmd[1])
 			else:
-				lswa()
+				lsw()
 		elif cmd[0]=='cd':
 			if len(cmd)>1:
-			        cdwa(cmd[1])
+			        cdw(cmd[1])
 			else :
-				cdwa()
+				cdw()
                 elif cmd[0]=='cat':
-			catwa(cmd[1])
+			catw(cmd[1])
 
 		elif cmd[0]=='touch':
-			touchwa(cmd[1])
+			touchw(cmd[1])
 
 		elif cmd[0]=='custom':
 			print "Custom shell initiated..(exit to return)"
-			custwa()
+			custw()
 		elif cmd[0]=='kurkure':
-			kurkurewa()
+			kurkurew()
 		elif cmd[0]=='exit':
 			break
 		elif cmd[0]=='':
@@ -116,7 +120,7 @@ def prime():
 			print 'Command does not Exist'
 			
 	
-def custwa():
+def custw():
 	while 1 :
 		cmd=raw_input("Shellwa:~# ")
 		if cmd=='exit':return
@@ -130,7 +134,7 @@ def custwa():
 				print x
 
 
-def kurkurewa():
+def kurkurew():
 	rand=random.randint(0,9)
 	f=open("/root/python/kurkure",'r')
 	for x in range(10):
