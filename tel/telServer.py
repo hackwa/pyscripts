@@ -77,20 +77,40 @@ def threadw(tcpClik):
 		else:
 			tcpClik.send('Error!! Please try again...\n')
 	uid=uidw(uname)
-	os.setreuid(uid,uid)
+	print uid
 	tcpClik.send('Logged in successfully..\n')
-	tcpClik.send(' * Documentation:  https://help.ubuntu.com/ \n\n')
+	tcpClik.send(' * Documentation:  https://github.com/hackwa \n\n')
 	host=commands.getoutput('hostname')
 	while True:
 		try:
 			tcpClik.send('\n%s@%s:~$ '%(uname,host))
 			data=tcpClik.recv(BUFSIZE)
+			temp=data.split(" ")
 			cdw=0
+			# cd doesn't work properly in commands
 			if data.split(" ")[0]=='cd':
 				cdw=testForCd(data,uname,tcpClik)
 			if cdw ==1:
 				continue
-			out=commands.getstatusoutput(data)
+			# su command
+			if temp[0]=='su':
+
+				if len(temp)<2:
+					newUser='root'
+				else:
+					tcpClik.send('Username: ')
+					newUser=tcpClik.recv(BUFSIZE)
+					
+				tcpClik.send("Password: ")
+				data=tcpClik.recv(BUFSIZE)
+				checkw=check(newUser,data)
+				if checkw==1:
+					uname=newUser
+					continue
+				else:
+					tcpClik.send('Error while logging in...!!')
+					continue
+			out=commands.getstatusoutput("sudo -u %s %s"%(uname,data))
 			print out
 			if not out[0]:
 				tcpClik.send(out[1])

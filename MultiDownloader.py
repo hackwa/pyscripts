@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # A basic download manager to download a given url using 4 threads
-# Still to add ecxeption handling 
+# Still to add exception handling 
 
 import os
 import urllib
