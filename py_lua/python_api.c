@@ -10,7 +10,6 @@ int downloadBitstream(){
     char *subModule = "Bitstream";
     char *bitstream = "audiovideo.bit";
     char *downloadMethod = "download";
-
     pName = PyUnicode_DecodeFSDefault(module);
     pModule = PyImport_Import(pName);
     Py_DECREF(pName);
