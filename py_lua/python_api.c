@@ -6,7 +6,6 @@ Py_buffer globalView;
 int downloadBitstream(){
     PyObject *pName, *pModule, *pSubModule, *pFunc;
     PyObject *pArgs, *pValue;
-
     char *module = "pynq";
     char *subModule = "Bitstream";
     char *bitstream = "audiovideo.bit";
@@ -15,7 +14,6 @@ int downloadBitstream(){
     pName = PyUnicode_DecodeFSDefault(module);
     pModule = PyImport_Import(pName);
     Py_DECREF(pName);
-
     if (pModule != NULL) {
         pSubModule = PyObject_GetAttrString(pModule, subModule);
         /* pSubModule is a new reference */
@@ -141,11 +139,15 @@ unsigned char * getFrameBuffer()
 
 void pyinit()
 {
+	printf("Initializing python..\n");
+	char * pylib = "/usr/lib/arm-linux-gnueabihf/libpython3.4m.so.1.0";
+	dlopen(pylib,(RTLD_LAZY | RTLD_GLOBAL ));
     Py_Initialize();
 }
 
 void pyfinal()
 {
+	printf("Finalizing python..\n");
     Py_Finalize();
 }
 
