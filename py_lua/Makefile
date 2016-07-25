@@ -1,3 +1,12 @@
+SOURCE = python_api.c
+
+INC= -I /home/xpp/torch/pkg/torch/lib/TH/ -I /usr/include/python3.4m -I /home/xpp/torch/install/include/TH/
+LIBS= -lpthread -ldl -lutil -lm -lpython3.4m
+
 all:
-	gcc -c python_api.c -o test -I/usr/include/python3.4m -I/usr/include/python3.4m 
-	gcc test -Wl,--start-group -L/opt/lib/python3.4/config-3.4m -lpthread -ldl -lutil -lm -lpython3.4m -Xlinker -export-dynamic -Wl,--end-group -o out
+	gcc -c $(SOURCE) -o test $(INC) 
+	gcc test -Wl,--start-group $(LIBS) -Xlinker -export-dynamic -Wl,--end-group -o out
+
+shared:
+	gcc -c  -O3 -fPIC $(SOURCE) -o test $(INC)
+	gcc -shared $(INC) -fPIC -rdynamic test -Wl,--start-group $(LIBS) -Xlinker -export-dynamic -Wl,--end-group -o out.so

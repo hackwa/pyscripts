@@ -1,7 +1,7 @@
-#include <Python.h>
-#include <unistd.h>
+#include "python_api.h"
 
 PyObject *hdmiInstance;
+Py_buffer globalView;
 
 int downloadBitstream(){
     PyObject *pName, *pModule, *pSubModule, *pFunc;
@@ -60,7 +60,7 @@ int downloadBitstream(){
 }
 
 
-PyObject  *startHdmi(){
+void  *startHdmi(){
     PyObject *pName, *pModule, *pSubModule, *pFunc;
     PyObject *pArgs, *pValue;
 
@@ -81,15 +81,14 @@ PyObject  *startHdmi(){
             pArgs = PyTuple_New(1);
             pValue = PyUnicode_DecodeFSDefault(direction);
             PyTuple_SetItem(pArgs, 0, pValue);
-            pValue = PyObject_CallObject(pSubModule, pArgs);
+            hdmiInstance = PyObject_CallObject(pSubModule, pArgs);
             Py_DECREF(pArgs);
             if (pValue != NULL) {
                 printf("HDMI Object Created \n");
-                pFunc = PyObject_GetAttrString(pValue,startMethod);
+                pFunc = PyObject_GetAttrString(hdmiInstance,startMethod);
                 if (pFunc && PyCallable_Check(pFunc)) {
              	    PyObject_CallObject(pFunc,NULL);
-            	   // Py_DECREF(pFunc);
-            	    return pValue;
+            	    Py_DECREF(pFunc);
                 }
             }
             else {
@@ -97,7 +96,6 @@ PyObject  *startHdmi(){
                 Py_DECREF(pModule);
                 PyErr_Print();
                 fprintf(stderr,"Call failed\n");
-                return NULL;
             }
         }
         else {
@@ -111,13 +109,10 @@ PyObject  *startHdmi(){
     else {
         PyErr_Print();
         fprintf(stderr, "Failed to load \"%s\"\n",module);
-        return NULL;
     }
-
-    return NULL;
 }
 
-void getCurrentFrame(PyObject* hdmiInstance, Py_buffer *view)
+void getCurrentFrame(Py_buffer *view)
 {
     PyObject *pFunc, *pFrame, *frameInstance, *pAttr;
     char *frameMethod = "frame_raw";
@@ -138,17 +133,32 @@ void getCurrentFrame(PyObject* hdmiInstance, Py_buffer *view)
     }
 }
 
+unsigned char * getFrameBuffer()
+{
+    getCurrentFrame(&globalView);
+    return (unsigned char *) globalView.buf;
+}
+
+void pyinit()
+{
+    Py_Initialize();
+}
+
+void pyfinal()
+{
+    Py_Finalize();
+}
+
 int
 main(int argc, char *argv[])
 {
-    PyObject *hdmiInstance;
     unsigned char * data;
     Py_buffer view ;
     Py_Initialize();
     downloadBitstream();
     sleep(1);
-    hdmiInstance = startHdmi();
-    getCurrentFrame(hdmiInstance,&view);
+    startHdmi();
+    getCurrentFrame(&view);
     data = (unsigned char *) view.buf;
     for(int i=0;i<view.len;i++)
         {
