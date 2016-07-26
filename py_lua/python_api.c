@@ -140,14 +140,13 @@ int getFrameBuffer()
     unsigned char *tmp = globalView.buf;
     for(i=0; i<videoHeight; i++)
     {
-        memcpy(tmpBuf,tmp,3*videoWidth);
-        tmp = tmp + (1920)*3;
+        memcpy(tmpBuf + (videoWidth)*i*3,tmp + (1920)*i*3,3*videoWidth);
     }
-    for (int i = 0; i < 650; ++i)
+    for (int i = 0; i < videoSize; ++i)
     {
-        printf("%d\t", tmpBuf[i]);
+        torchBuf[i] = (float)tmpBuf[i]/256.0;
     }
-    return (int)globalView.buf;
+    return (int)torchBuf;
 }
 
 void pyinit()
