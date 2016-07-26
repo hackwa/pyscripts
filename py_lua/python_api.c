@@ -138,16 +138,42 @@ int getFrameBuffer()
     if(globalView.buf == NULL)
         getCurrentFrame(&globalView);
     unsigned char *tmp = globalView.buf;
+    // Bring to Cacheable memory
     for(i=0; i<videoHeight; i++)
     {
         memcpy(tmpBuf + (videoWidth)*i*3,tmp + (1920)*i*3,3*videoWidth);
     }
+    // Normalize
     for (int i = 0; i < videoSize; ++i)
     {
         torchBuf[i] = (float)tmpBuf[i]/256.0;
     }
     return (int)torchBuf;
 }
+
+
+int getFrameBufferUnoptimised()
+{
+    int i,j,ctr = 0;
+    if(globalView.buf == NULL)
+        getCurrentFrame(&globalView);
+    unsigned char *tmp = globalView.buf;
+    // Bring to Cacheable memory
+    for(i=0; i<videoHeight; i++)
+    {
+        memcpy(tmpBuf + (videoWidth)*i*3,tmp + (1920)*i*3,3*videoWidth);
+    }
+    // Normalize
+    for (j = 0; j < 3; ++j)
+    {
+    for (i = j; i < videoSize; i+=3)
+        {
+            torchBuf[ctr++] = (float)tmpBuf[i]/256.0;
+        }
+    }
+    return (int)torchBuf;
+}
+
 
 void pyinit()
 {

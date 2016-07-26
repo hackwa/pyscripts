@@ -8,6 +8,6 @@ all:
 	gcc test -Wl,--start-group $(LIBS) -Xlinker -export-dynamic -Wl,--end-group -o out
 
 shared:
-	gcc -c  -O3 -fPIC $(SOURCE) -o test $(INC)
-	gcc -O3 -shared $(INC) -fPIC -rdynamic test -Wl,--start-group $(LIBS) -Xlinker -export-dynamic -Wl,--end-group -o out.so
+	gcc -c  -O3 -Ofast -fPIC $(SOURCE) -o test $(INC)
+	gcc -O3 -Ofast -shared $(INC) -fPIC -rdynamic test -Wl,--start-group $(LIBS) -Xlinker -export-dynamic -Wl,--end-group -o out.so
 	rm test
