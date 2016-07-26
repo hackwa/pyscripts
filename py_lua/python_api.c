@@ -2,6 +2,8 @@
 
 PyObject *hdmiInstance;
 Py_buffer globalView;
+float *torchBuf=NULL;
+unsigned char *tmpBuf=NULL;
 
 int downloadBitstream(){
     PyObject *pName, *pModule, *pSubModule, *pFunc;
@@ -130,10 +132,22 @@ void getCurrentFrame(Py_buffer *view)
     }
 }
 
-unsigned char * getFrameBuffer()
+int getFrameBuffer()
 {
-    getCurrentFrame(&globalView);
-    return (unsigned char *) globalView.buf;
+    int i,j;
+    if(globalView.buf == NULL)
+        getCurrentFrame(&globalView);
+    unsigned char *tmp = globalView.buf;
+    for(i=0; i<videoHeight; i++)
+    {
+        memcpy(tmpBuf,tmp,3*videoWidth);
+        tmp = tmp + (1920)*3;
+    }
+    for (int i = 0; i < 650; ++i)
+    {
+        printf("%d\t", tmpBuf[i]);
+    }
+    return (int)globalView.buf;
 }
 
 void pyinit()
@@ -141,12 +155,17 @@ void pyinit()
 	printf("Initializing python..\n");
 	char * pylib = "/usr/lib/arm-linux-gnueabihf/libpython3.4m.so.1.0";
 	dlopen(pylib,(RTLD_LAZY | RTLD_GLOBAL ));
+	tmpBuf = malloc(videoSize);
+	torchBuf = (float *) malloc(sizeof(float) * videoSize);
     Py_Initialize();
 }
 
 void pyfinal()
 {
 	printf("Finalizing python..\n");
+	PyBuffer_Release(&globalView);
+	free(tmpBuf);
+	free(torchBuf);
     Py_Finalize();
 }
 
