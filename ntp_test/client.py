@@ -4,6 +4,8 @@ import time
 import sys
 import socket
 
+get_time_us = lambda: str(round(time.time()*10**6))
+
 HOST, PORT = sys.argv[1], 9999
 data = get_time_us()
 
