@@ -19,5 +19,17 @@ received = str(received,"utf-8").split("\n")
 
 print("Client : {} {}".format(data_sent_at,data_recvd_at))
 print("Server: {} {}".format(received[0],received[1]))
-latency_us = str(int(data_recvd_at) - int(data_sent_at))
-print("latency = "+ latency_us + " us")
+#latency_us = str(int(data_recvd_at) - int(data_sent_at))
+#print("latency = "+ latency_us + " us")
+
+T1 = int(data_sent_at)
+T2 = int(data_recvd_at)
+T3 = int(received[0])
+T4 = int(received[1])
+#print("Calculating Delay and offset for: ",T1,T2,T3,T4)
+
+delay = T3 - T1 + T2 - T4
+offset = (T3 - T1 - T2 + T4)/2
+
+print("Delay: ",delay,"us")
+print("Offset: ", offset,"us")
