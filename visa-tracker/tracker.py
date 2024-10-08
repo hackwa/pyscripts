@@ -1,5 +1,5 @@
 # User Steps:
-# 1. pip install telethon
+# 1. pip install telethon pillow
 # 2. Ubuntu : sudo apt install ffplay
 #    Windows : install vlc media player
 # 3. Create a telegram account and get API_ID, API_HASH at:
